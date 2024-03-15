@@ -1,7 +1,4 @@
 {
-  "cSpell.words": [
-    "fpdart",
-    "signup"
-  ],
+  "cSpell.words": ["fpdart", "signup", "supabase", "Usecase"],
   "dart.flutterSdkPath": ".fvm\\versions\\3.19.3"
 }

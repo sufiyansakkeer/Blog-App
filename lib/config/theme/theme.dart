@@ -8,8 +8,7 @@ class AppTheme {
         width: 2,
       ),
       borderRadius: const BorderRadius.all(Radius.circular(8)));
-  static final darkTheme = ThemeData.dark().copyWith(
-      useMaterial3: true,
+  static final darkTheme = ThemeData.dark(useMaterial3: true).copyWith(
       scaffoldBackgroundColor: AppPalette.backgroundColor,
       inputDecorationTheme: InputDecorationTheme(
         enabledBorder: _border(),
