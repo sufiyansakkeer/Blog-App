@@ -11,9 +11,11 @@ class AppTheme {
   static final darkTheme = ThemeData.dark(useMaterial3: true).copyWith(
       scaffoldBackgroundColor: AppPalette.backgroundColor,
       inputDecorationTheme: InputDecorationTheme(
-        enabledBorder: _border(),
-        focusedBorder: _border(AppPalette.gradient1),
-      ),
+          errorStyle: const TextStyle(color: Colors.red),
+          enabledBorder: _border(),
+          focusedBorder: _border(AppPalette.gradient1),
+          errorBorder: _border(Colors.red),
+          focusedErrorBorder: _border(Colors.red)),
       appBarTheme: const AppBarTheme(
         backgroundColor: AppPalette.backgroundColor,
       ));
