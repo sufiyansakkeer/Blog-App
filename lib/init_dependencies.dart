@@ -9,12 +9,19 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 GetIt serviceLocator = GetIt.instance;
 Future<void> initDependencies() async {
-  // _initAuth();
+  _initAuth();
   final supabase = await Supabase.initialize(
     url: AppSecrets.supabaseUrl,
     anonKey: AppSecrets.anonKey,
   );
-  serviceLocator.registerLazySingleton(() => supabase);
+  serviceLocator.registerLazySingleton(() => supabase.client);
+}
+
+void _initAuth() {
+  // here we added AuthRemoteDataSource as the generic form of the register
+  // factory , because when we try to register for auth repository it can't find
+  // AuthRemoteDataSource only AuthRemoteDataSourceImpl and that's why.
+
   serviceLocator.registerFactory<AuthRemoteDataSources>(
     () => AuthRemoteDataSourcesImp(
       supabaseClient: serviceLocator(),
@@ -33,34 +40,6 @@ Future<void> initDependencies() async {
   );
 
   serviceLocator.registerLazySingleton(
-    () => AuthBloc(
-      userSignUp: serviceLocator(),
-    ),
-  );
-}
-
-void _initAuth() {
-  // here we added AuthRemoteDataSource as the generic form of the register
-  // factory , because when we try to register for auth repository it can't find
-  // AuthRemoteDataSource only AuthRemoteDataSourceImpl and that's why.
-  serviceLocator.registerFactory<AuthRemoteDataSources>(
-    () => AuthRemoteDataSourcesImp(
-      supabaseClient: serviceLocator(),
-    ),
-  );
-  serviceLocator.registerFactory<AuthRepository>(
-    () => AuthRepositoryImpl(
-      serviceLocator(),
-    ),
-  );
-
-  serviceLocator.registerFactory(
-    () => UserSignUpUseCase(
-      serviceLocator(),
-    ),
-  );
-
-  serviceLocator.registerFactory(
     () => AuthBloc(
       userSignUp: serviceLocator(),
     ),
