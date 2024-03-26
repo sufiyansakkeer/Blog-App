@@ -20,7 +20,7 @@ class AuthField extends StatelessWidget {
       controller: textEditingController,
       decoration: InputDecoration(hintText: hintText),
       validator: validator,
-      autovalidateMode: AutovalidateMode.onUserInteraction,
+      // autovalidateMode: AutovalidateMode.onUserInteraction,
       obscureText: obscureText,
       keyboardType: keyboardType,
     );

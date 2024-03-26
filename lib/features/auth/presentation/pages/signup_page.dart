@@ -68,6 +68,9 @@ class _SignUpPageState extends State<SignUpPage> {
                   if (value.isEmpty) {
                     return "Required";
                   }
+                  if (value.length <= 3) {
+                    return "Invalid name";
+                  }
                   return null;
                 },
               ),
@@ -117,13 +120,13 @@ class _SignUpPageState extends State<SignUpPage> {
               AuthGradientButton(
                 onPressed: () {
                   if (formKey.currentState!.validate()) {
-                    context.read<AuthBloc>().add(
-                          AuthSignUp(
-                            name: nameController.text.trim(),
-                            email: emailController.text.trim(),
-                            password: passwordController.text.trim(),
-                          ),
-                        );
+                    BlocProvider.of<AuthBloc>(context).add(
+                      AuthSignUp(
+                        name: nameController.text.trim(),
+                        email: emailController.text.trim(),
+                        password: passwordController.text.trim(),
+                      ),
+                    );
                   }
                   log(formKey.currentState!.validate().toString());
                 },
