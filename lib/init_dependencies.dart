@@ -1,7 +1,8 @@
 import 'package:blog_app/core/secrets/app_secretes.dart';
-import 'package:blog_app/features/auth/data/datasources/auth_remote_datasources.dart';
+import 'package:blog_app/features/auth/data/data_sources/auth_remote_data_sources.dart';
 import 'package:blog_app/features/auth/data/repository/auth_repository_impl.dart';
 import 'package:blog_app/features/auth/domain/repository/auth_repository.dart';
+import 'package:blog_app/features/auth/domain/usecases/user_login_usecase.dart';
 import 'package:blog_app/features/auth/domain/usecases/user_sign_up_usecase.dart';
 import 'package:blog_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:get_it/get_it.dart';
@@ -22,26 +23,35 @@ void _initAuth() {
   // factory , because when we try to register for auth repository it can't find
   // AuthRemoteDataSource only AuthRemoteDataSourceImpl and that's why.
 
-  serviceLocator.registerFactory<AuthRemoteDataSources>(
-    () => AuthRemoteDataSourcesImp(
-      supabaseClient: serviceLocator(),
-    ),
-  );
-  serviceLocator.registerFactory<AuthRepository>(
-    () => AuthRepositoryImpl(
-      serviceLocator(),
-    ),
-  );
-
-  serviceLocator.registerFactory(
-    () => UserSignUpUseCase(
-      serviceLocator(),
-    ),
-  );
-
-  serviceLocator.registerLazySingleton(
-    () => AuthBloc(
-      userSignUp: serviceLocator(),
-    ),
-  );
+  serviceLocator
+    // Data source
+    ..registerFactory<AuthRemoteDataSources>(
+      () => AuthRemoteDataSourcesImp(
+        supabaseClient: serviceLocator(),
+      ),
+    )
+    //Repository
+    ..registerFactory<AuthRepository>(
+      () => AuthRepositoryImpl(
+        serviceLocator(),
+      ),
+    )
+    // usecases
+    ..registerFactory(
+      () => UserSignUpUseCase(
+        serviceLocator(),
+      ),
+    )
+    ..registerFactory(
+      () => UserLoginUseCase(
+        authRepository: serviceLocator(),
+      ),
+    )
+    // bloc
+    ..registerLazySingleton(
+      () => AuthBloc(
+        userSignUp: serviceLocator(),
+        userLogin: serviceLocator(),
+      ),
+    );
 }

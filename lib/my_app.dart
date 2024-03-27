@@ -5,6 +5,8 @@ import 'package:blog_app/init_dependencies.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+GlobalKey<ScaffoldMessengerState> snackBarKey = GlobalKey();
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -15,10 +17,12 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (_) => AuthBloc(
             userSignUp: serviceLocator(),
+            userLogin: serviceLocator(),
           ),
         )
       ],
       child: MaterialApp(
+        scaffoldMessengerKey: snackBarKey,
         debugShowCheckedModeBanner: false,
         theme: AppTheme.darkTheme,
         home: const SignInPage(),
