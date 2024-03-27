@@ -48,3 +48,6 @@ app.*.map.json
 
 # FVM Version Cache
 .fvm/
+
+#supabase keys
+app_secretes.dart
