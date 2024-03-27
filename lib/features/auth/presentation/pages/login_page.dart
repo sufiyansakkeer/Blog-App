@@ -72,12 +72,32 @@ class _SignInPageState extends State<SignInPage> {
                   AuthField(
                     hintText: 'Email',
                     textEditingController: emailController,
+                    validator: (value) {
+                      if (value == null) {
+                        return "Required";
+                      }
+                      if (value.isEmpty) {
+                        return "Required";
+                      }
+                      if (!RegExp(
+                              r'^[\w-]+(\.[\w-]+)*@([a-zA-Z0-9-]+)(\.[a-zA-Z0-9-]+)*(\.[a-z]{2,})$')
+                          .hasMatch(value)) {
+                        return "Please enter valid email";
+                      }
+                      return null;
+                    },
                   ),
                   15.height(),
                   AuthField(
                     hintText: 'Password',
                     textEditingController: passwordController,
                     obscureText: true,
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return "Password cannot be empty";
+                      }
+                      return null;
+                    },
                   ),
                   15.height(),
                   AuthGradientButton(
@@ -86,6 +106,7 @@ class _SignInPageState extends State<SignInPage> {
                         formKey.currentState!.validate().toString(),
                         name: "sign in page validator",
                       );
+
                       if (formKey.currentState!.validate()) {
                         context.read<AuthBloc>().add(
                               AuthLogin(

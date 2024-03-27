@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 abstract interface class AuthRemoteDataSources {
+  Session? get currentUserSession;
   Future<UserModel> signUpWithEmailPassword({
     required String email,
     required String name,
@@ -15,6 +16,8 @@ abstract interface class AuthRemoteDataSources {
     required String email,
     required String password,
   });
+
+  Future<UserModel?> getCurrentUserData();
 }
 
 class AuthRemoteDataSourcesImp implements AuthRemoteDataSources {
@@ -22,6 +25,10 @@ class AuthRemoteDataSourcesImp implements AuthRemoteDataSources {
   AuthRemoteDataSourcesImp({
     required this.supabaseClient,
   });
+
+  @override
+  Session? get currentUserSession => supabaseClient.auth.currentSession;
+
   @override
   Future<UserModel> loginWithEmailPassword({
     required String email,
@@ -40,7 +47,7 @@ class AuthRemoteDataSourcesImp implements AuthRemoteDataSources {
       }
       return UserModel.fromJson(
         response.user!.toJson(),
-      );
+      ).copyWith(email: email);
     } catch (e) {
       debugPrint(
         e.toString(),
@@ -67,12 +74,33 @@ class AuthRemoteDataSourcesImp implements AuthRemoteDataSources {
       }
       return UserModel.fromJson(
         response.user!.toJson(),
-      );
+      ).copyWith(email: email);
     } catch (e) {
       debugPrint(
         e.toString(),
       );
       log(e.toString(), name: "sign up supabase Exception");
+      throw ServerException(e.toString());
+    }
+  }
+
+  @override
+  Future<UserModel?> getCurrentUserData() async {
+    try {
+      if (currentUserSession != null) {
+        final userData = await supabaseClient
+            .from("profiles")
+            .select()
+            .eq("id", currentUserSession!.user.id);
+        return UserModel.fromJson(
+          userData.first,
+        ).copyWith(
+          email: currentUserSession!.user.email,
+        );
+      }
+      return null;
+    } catch (e) {
+      log(e.toString(), name: "get current user data exception");
       throw ServerException(e.toString());
     }
   }
